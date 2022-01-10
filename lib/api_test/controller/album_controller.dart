@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-import '../album_model.dart';
+import 'package:work_manager_async/api_test/model/album_model.dart';
 
 class AlbumControlleer {
   Future<Album> fetchAlbum() async {

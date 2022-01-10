@@ -1,7 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 class NotificationCenter {
-  Future<void> pushNotification() async {
+  Future<void> pushNotification(String title, String body) async {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         // This is just a basic example. For real apps, you must show some
@@ -13,9 +13,6 @@ class NotificationCenter {
 
     await AwesomeNotifications().createNotification(
         content: NotificationContent(
-            id: 10,
-            channelKey: 'basic_channel',
-            title: 'Simple Notification',
-            body: 'Simple body'));
+            id: 10, channelKey: 'basic_channel', title: title, body: body));
   }
 }

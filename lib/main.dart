@@ -3,11 +3,10 @@
 import 'dart:async';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:work_manager_async/api_test/model/controller/album_controller.dart';
 import 'package:workmanager/workmanager.dart';
+import 'api_test/controller/album_controller.dart';
 import 'api_test/notification/notification_center.dart';
-
-const String TAG = "BackGround_Work";
+import 'api_test/view/home_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +36,24 @@ void main() {
   runApp(MyApp());
 }
 
+// Execute every 15 minute.
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    var album = await AlbumControlleer().fetchAlbum();
+    await NotificationCenter()
+        .pushNotification(album.id.toString(), album.title);
+    print(album.id.toString() +
+        ' ' +
+        album.title +
+        ' ' +
+        album.userId.toString());
+    return Future.value(true);
+  });
+}
+
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -50,84 +66,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class BackGroundWorkSample extends StatefulWidget {
-  @override
-  _BackGroundWorkSampleState createState() => _BackGroundWorkSampleState();
-}
-
-class _BackGroundWorkSampleState extends State<BackGroundWorkSample> {
-  int _counterValue = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    //This task runs periodically
-    //It will wait at least 10 seconds before its first launch
-    //Since we have not provided a frequency it will be the default 15 minutes
-    Workmanager().registerPeriodicTask(
-      TAG,
-      "simplePeriodicTask",
-      initialDelay: Duration(seconds: 10),
-    );
-    loalData();
-  }
-
-  void loalData() async {
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('BackGround Work Sample'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextButton(
-                  onPressed: () async {
-                    await NotificationCenter().pushNotification();
-                  },
-                  child: Text('Create Notification'))
-            ],
-          ),
-        ));
-  }
-}
-
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    var album = await AlbumControlleer().fetchAlbum();
-    await NotificationCenter().pushNotification();
-    print(album.id.toString() +
-        ' ' +
-        album.title +
-        ' ' +
-        album.userId.toString());
-    return Future.value(true);
-  });
-}
-
-// class BackGroundWork {
-//   BackGroundWork._privateConstructor();
-
-//   static final BackGroundWork _instance = BackGroundWork._privateConstructor();
-
-//   static BackGroundWork get instance => _instance;
-
-//   // _loadCounterValue(int value) async {
-//   //   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   //   await prefs.setInt('BackGroundCounterValue', value);
-//   // }
-
-//   // Future<int> _getBackGroundCounterValue() async {
-//   //   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   //   //Return bool
-//   //   int counterValue = prefs.getInt('BackGroundCounterValue') ?? 0;
-//   //   print('getted value ${counterValue}');
-//   //   return counterValue;
-//   // }
-// }
