@@ -5,6 +5,8 @@ import 'package:workmanager/workmanager.dart';
 const String tag = "BackGround_Work";
 
 class BackGroundWorkSample extends StatefulWidget {
+  const BackGroundWorkSample({Key? key}) : super(key: key);
+
   @override
   _BackGroundWorkSampleState createState() => _BackGroundWorkSampleState();
 }
@@ -19,7 +21,7 @@ class _BackGroundWorkSampleState extends State<BackGroundWorkSample> {
     Workmanager().registerPeriodicTask(
       tag,
       "simplePeriodicTask",
-      initialDelay: Duration(seconds: 10),
+      initialDelay: const Duration(seconds: 10),
     );
   }
 
